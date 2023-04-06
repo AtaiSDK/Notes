@@ -15,7 +15,4 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new MainFragment())
                 .commit();
     }
-
-
-
 }
