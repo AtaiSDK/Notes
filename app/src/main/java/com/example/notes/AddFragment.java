@@ -14,14 +14,16 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
 public class AddFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
-    TextView textView;
+    TextView textView, textView1, textView2 ;
     ImageView imageView;
+    Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,7 +31,45 @@ public class AddFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         textView = view.findViewById(R.id.editTitle);
-        imageView = view.findViewById(R.id.image);
+        textView1 = view.findViewById(R.id.editDescription);
+        textView2 = view.findViewById(R.id.editDate);
+        button = view.findViewById(R.id.btnAdd);
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = textView.getText().toString();
+                String desc = textView1.getText().toString();
+                String date = textView2.getText().toString();
+                Note note = new Note(title, desc, "", date);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("data", note);
+
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.setArguments(bundle1);
+
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, mainFragment)
+                        .commit();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        imageView = view.findViewById( R.id.image);
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,6 +87,7 @@ public class AddFragment extends Fragment {
         }
         return view;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
