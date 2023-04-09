@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -28,8 +29,13 @@ public class AddFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_add, container, false);
+    }
 
-        View view = inflater.inflate(R.layout.fragment_add, container, false);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         textView = view.findViewById(R.id.editTitle);
         textView1 = view.findViewById(R.id.editDescription);
         textView2 = view.findViewById(R.id.editDate);
@@ -54,20 +60,6 @@ public class AddFragment extends Fragment {
                         .commit();
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         imageView = view.findViewById( R.id.image);
 
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -85,9 +77,7 @@ public class AddFragment extends Fragment {
             String text = bundle.getString("key");
             textView.setText(text);
         }
-        return view;
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

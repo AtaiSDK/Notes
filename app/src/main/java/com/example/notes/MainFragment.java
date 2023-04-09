@@ -2,6 +2,8 @@ package com.example.notes;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +26,12 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         button = view.findViewById(R.id.add_btn);
         editText = view.findViewById(R.id.editSearch);
         buttonSort = view.findViewById(R.id.sort_btn);
@@ -39,7 +46,7 @@ public class MainFragment extends Fragment {
             if (note != null) {
                 List<Note> list = new ArrayList<>();
                 list.add(note);
-                adapter.setList(list);
+                adapter.addNote(note);
             }
         }
         buttonSort.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +72,6 @@ public class MainFragment extends Fragment {
                         .commit();
             }
         });
-        return view;
+        super.onViewCreated(view, savedInstanceState);
     }
 }
