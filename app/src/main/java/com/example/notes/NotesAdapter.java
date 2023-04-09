@@ -16,10 +16,8 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder > {
     private List<Note> list = new ArrayList<>();
 
-    public void setList(List<Note> list){
-
-        this.list.clear();
-        this.list.addAll(list);
+    public void addNote(Note model) {
+        list.add(model);
         notifyDataSetChanged();
     }
 
