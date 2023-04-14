@@ -22,7 +22,9 @@ import android.widget.TextView;
 
 public class AddFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
-    TextView textView, textView1, textView2 ;
+    TextView textView;
+    TextView textView1;
+    TextView textView2 ;
     ImageView imageView;
     Button button;
 
@@ -41,6 +43,14 @@ public class AddFragment extends Fragment {
         textView2 = view.findViewById(R.id.editDate);
         button = view.findViewById(R.id.btnAdd);
 
+        Bundle bundleChange = getArguments();
+        if (bundleChange != null) {
+            Note note = (Note) bundleChange.getSerializable("key2");
+            if (textView != null && textView1 != null) {
+                textView.setText(note.getTitle());
+                textView1.setText(note.getDescription());
+            }
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

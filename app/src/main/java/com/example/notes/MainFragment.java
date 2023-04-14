@@ -1,5 +1,7 @@
 package com.example.notes;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,8 +18,8 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends Fragment {
-    Button button, buttonSort;
+public class MainFragment extends Fragment implements NotesAdapter.IOnItem {
+    Button button, buttonSort, buttonEdit;
     EditText editText;
     RecyclerView recyclerView;
     NotesAdapter adapter;
@@ -25,27 +27,33 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         button = view.findViewById(R.id.add_btn);
+        buttonEdit = view.findViewById(R.id.button23);
         editText = view.findViewById(R.id.editSearch);
         buttonSort = view.findViewById(R.id.sort_btn);
         recyclerView = view.findViewById(R.id.recycle);
-        adapter = new NotesAdapter();
+        adapter = new NotesAdapter(this);
         recyclerView.setAdapter(adapter);
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
 
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             Note note = (Note) bundle.getSerializable("data");
             if (note != null) {
-                List<Note> list = new ArrayList<>();
-                list.add(note);
+
                 adapter.addNote(note);
             }
         }
@@ -73,5 +81,40 @@ public class MainFragment extends Fragment {
             }
         });
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void delete(int pos) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+        alert.setTitle("Warning");
+        alert.setMessage("Are you sure to delete?");
+        alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                adapter.delete(pos);
+            }
+        });
+        alert.setNegativeButton("Cansel", null);
+        alert.show();
+    }
+
+    @Override
+    public void share(int pos) {
+
+    }
+
+    @Override
+    public void edit(int pos, Note note) {
+                AddFragment  fragment = new AddFragment();
+                Bundle bundleChange = new Bundle();
+                bundleChange.putSerializable("key2", note);
+                AddFragment addFragment = new AddFragment();
+                addFragment.setArguments(bundleChange);
+
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, addFragment)
+                        .commit();
+
+
     }
 }
