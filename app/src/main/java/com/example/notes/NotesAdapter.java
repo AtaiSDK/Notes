@@ -58,7 +58,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder >
             title = itemView.findViewById(R.id.textTitle);
             description = itemView.findViewById(R.id.textDescription);
             date = itemView.findViewById(R.id.textDate);
-            change = itemView.findViewById(R.id.button2);
+            change = itemView.findViewById(R.id.button23);
             delete = itemView.findViewById(R.id.button3);
             send = itemView.findViewById(R.id.button1);
         }

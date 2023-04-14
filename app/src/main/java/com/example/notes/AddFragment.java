@@ -12,19 +12,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class AddFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
-    TextView textView;
-    TextView textView1;
-    TextView textView2 ;
+    EditText editTitle;
+    EditText editDesc;
+    EditText editDate;
     ImageView imageView;
     Button button;
 
@@ -38,39 +41,48 @@ public class AddFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        textView = view.findViewById(R.id.editTitle);
-        textView1 = view.findViewById(R.id.editDescription);
-        textView2 = view.findViewById(R.id.editDate);
+        editTitle = view.findViewById(R.id.editTitle);
+        editDesc = view.findViewById(R.id.editDescription);
+        editDate = view.findViewById(R.id.editDate);
         button = view.findViewById(R.id.btnAdd);
 
-        Bundle bundleChange = getArguments();
-        if (bundleChange != null) {
-            Note note = (Note) bundleChange.getSerializable("key2");
-            if (textView != null && textView1 != null) {
-                textView.setText(note.getTitle());
-                textView1.setText(note.getDescription());
-            }
-        }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = textView.getText().toString();
-                String desc = textView1.getText().toString();
-                String date = textView2.getText().toString();
+        if (getArguments() != null) {
+            button.setText("Edit");
+            Note note = (Note) getArguments()
+                    .getSerializable("key2");
+
+            int position = getArguments().getInt("position");
+
+            editTitle.setText(note.getTitle());
+            editDesc.setText(note.getDescription());
+            button.setOnClickListener(v -> {
+                String titleEdit = editTitle.getText().toString();
+                String titleDes = editDesc.getText().toString();
+                String titleDate = editDate.getText().toString();
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", position);
+                bundle.putSerializable("editNote", new Note(titleEdit, titleDes, "", titleDate));
+                requireActivity().getSupportFragmentManager().setFragmentResult("editData", bundle);
+                requireActivity().getSupportFragmentManager().popBackStack();
+                Toast.makeText(requireActivity(), "Кнопка нажата", Toast.LENGTH_SHORT).show();
+            });
+
+        } else {
+            button.setOnClickListener(v -> {
+                String title = editTitle.getText().toString();
+                String desc = editDesc.getText().toString();
+                String date = editDate.getText().toString();
                 Note note = new Note(title, desc, "", date);
                 Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("data", note);
+                bundle1.putSerializable("model", note);
 
-                MainFragment mainFragment = new MainFragment();
-                mainFragment.setArguments(bundle1);
+                requireActivity().getSupportFragmentManager().setFragmentResult("data", bundle1);
+                requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            });
+        }
 
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, mainFragment)
-                        .commit();
-            }
-        });
-        imageView = view.findViewById( R.id.image);
+        imageView = view.findViewById(R.id.image);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +90,13 @@ public class AddFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 1);
             }
-
-
         });
-        if (getArguments() != null) {
+      /*  if (getArguments() != null) {
             Bundle bundle = getArguments();
 
             String text = bundle.getString("key");
-            textView.setText(text);
-        }
+            editTitle.setText(text);
+        }*/
     }
 
     @Override
